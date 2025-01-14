@@ -61,6 +61,7 @@ public class TcpMicroBootstrapFlow extends SocketMicroBootstrapFlow {
     @Override
     public void pipelineCodec(PipelineContext context) {
         // 数据包长度 = 长度域的值 + lengthFieldOffset + lengthFieldLength + lengthAdjustment。
+        // NOTE: 这里为配置了根据消息中长度字段的值动态分割接收到的ByteBuf 的LengthFieldBasedFrameDecoder解码器
         context.addLast(new LengthFieldBasedFrameDecoder(
                 ExternalGlobalConfig.CoreOption.packageMaxSize,
                 // 长度字段的偏移量， 从 0 开始

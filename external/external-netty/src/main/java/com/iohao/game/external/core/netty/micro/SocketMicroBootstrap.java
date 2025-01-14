@@ -43,6 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 public final class SocketMicroBootstrap extends AbstractMicroBootstrap {
     @Override
     public void startup() {
+        // NOTE:用户长连接Socket服务核心配置与启动部分
         // 线程组相关
         GroupChannelOption groupChannelOption = this.setting.getGroupChannelOption();
         EventLoopGroup bossGroup = groupChannelOption.bossGroup();
@@ -53,7 +54,7 @@ public final class SocketMicroBootstrap extends AbstractMicroBootstrap {
         ServerBootstrap bootstrap = new ServerBootstrap()
                 .group(bossGroup, workerGroup)
                 .channel(channelClass);
-
+        // NOTE: 定时netty服务器所使用的一系列可选地option选项、监听器处理器等
         // 开发者可以选择性的重写流程方法，来定制符合自身项目的业务
         MicroBootstrapFlow<ServerBootstrap> microBootstrapFlow = this.setting.getMicroBootstrapFlow();
         microBootstrapFlow.createFlow(bootstrap);
@@ -64,7 +65,9 @@ public final class SocketMicroBootstrap extends AbstractMicroBootstrap {
 
         try {
             IoGameBanner.render();
-            channelFuture.channel().closeFuture().sync();
+            channelFuture.channel()
+                         .closeFuture()
+                         .sync();
         } catch (InterruptedException e) {
             log.error(e.getMessage(), e);
         } finally {
