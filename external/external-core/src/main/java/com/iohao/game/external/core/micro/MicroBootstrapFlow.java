@@ -87,9 +87,9 @@ public interface MicroBootstrapFlow<Bootstrap> {
      * @param pipelineContext context
      */
     default void pipelineFlow(PipelineContext pipelineContext) {
-        // NOTE:编解码
+        // NOTE:配置编解码
         pipelineCodec(pipelineContext);
-        // NOTE:心跳相关
+        // NOTE:配置心跳相关
         pipelineIdle(pipelineContext);
         /*
          * NOTE:自定义的业务编排 pipeline

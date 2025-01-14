@@ -81,19 +81,19 @@ abstract class SocketMicroBootstrapFlow extends AbstractMicroBootstrapFlow<Serve
 
     @Override
     public void pipelineCustom(PipelineContext context) {
-        // 日志打印（异常时）
+        // NOTE:日志打印（异常时）
         if (ExternalGlobalConfig.enableLoggerHandler) {
             context.addLast("SimpleLoggerHandler", SimpleLoggerHandler.me());
         }
 
-        // 路由存在检测
+        // NOTE:路由存在检测 (命令类似于http中path的前置检查)
         context.addLast("CmdCheckHandler", CmdCheckHandler.me());
 
-        // 管理 UserSession 的 Handler
+        // NOTE:管理 UserSession 的 Handler（处理请求上下文也即用户登录态信息）
         SocketUserSessionHandler socketUserSessionHandler = setting.option(SettingOption.socketUserSessionHandler);
         context.addLast("UserSessionHandler", socketUserSessionHandler);
 
-        // 路由访问验证 的 Handler
+        // NOTE: 路由访问验证 的 Handler （即检查当前连接是否有权限进行后续操作 比如发去对于游戏网关、逻辑服的调用等）
         SocketCmdAccessAuthHandler socketCmdAccessAuthHandler = setting.option(SettingOption.socketCmdAccessAuthHandler);
         context.addLast("CmdAccessAuthHandler", socketCmdAccessAuthHandler);
 

@@ -55,7 +55,7 @@ public final class SocketUserSessionHandler extends ChannelInboundHandlerAdapter
         BrokerClientModuleMessage moduleMessage = brokerClient.getBrokerClientModuleMessage();
         int idHash = moduleMessage.getIdHash();
 
-        // 加入到 session 管理
+        // NOTE:加入到 session 管理 即用户的登录态管理
         SocketUserSession userSession = userSessions.add(ctx);
         userSession.setExternalClientId(idHash);
 

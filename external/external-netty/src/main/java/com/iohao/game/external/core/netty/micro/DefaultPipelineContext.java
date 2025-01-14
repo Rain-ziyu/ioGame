@@ -50,7 +50,8 @@ public record DefaultPipelineContext(Channel channel, DefaultExternalCoreSetting
     @Override
     public void addLast(String name, Object handler) {
 
-        // aware 能力附加
+        // NOTE：aware 能力附加  在这里进行所有handler被配置之前的通用拦截
+        // NOTE: 通过检查多个标记性接口 为需要对应增强能力的handler快速增强  比如一个handler处理时需要使用所有正在使用的登录态信息、客户端信息、当前服务器启动的配置等
         this.setting.aware(handler);
 
         if (handler instanceof ChannelHandler channelHandler) {

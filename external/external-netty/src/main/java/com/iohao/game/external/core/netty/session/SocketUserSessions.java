@@ -44,7 +44,10 @@ import java.util.Objects;
  */
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class SocketUserSessions extends AbstractUserSessions<ChannelHandlerContext, SocketUserSession> {
-    /** 用户 session，与channel是 1:1 的关系 */
+    /** 用户 session，与channel是 1:1 的关系
+     *  NOTE: 该属性其实就是NETTY中用于管理当前连接（请求）中的所有共享属性（请求上下文）的KEY
+     *  NOTE: 只要是同一个Channel使用相同的KEY进行的操作一直是同一个value
+     */
     static final AttributeKey<SocketUserSession> userSessionKey = AttributeKey.valueOf("userSession");
 
     final ChannelGroup channelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
@@ -57,13 +60,13 @@ public final class SocketUserSessions extends AbstractUserSessions<ChannelHandle
         SocketUserSession userSession = new SocketUserSession(channel);
         userSession.cmdRegions = this.cmdRegions;
 
-        // channel 中也保存 UserSession 的引用
+        // NOTE: channel 中也保存 UserSession 的引用 （保存请求上下文）
         channel.attr(SocketUserSessions.userSessionKey).set(userSession);
 
         UserChannelId userChannelId = userSession.getUserChannelId();
         this.userChannelIdMap.putIfAbsent(userChannelId, userSession);
         this.channelGroup.add(channel);
-
+        // NOTE: 为当前请求的session中放入一些默认的信息 比如连接方式等
         this.settingDefault(userSession);
 
         return userSession;
