@@ -39,7 +39,7 @@ public final class SocketIdleExcludeHandler extends ChannelInboundHandlerAdapter
 
         int cmdCode = message.getHeadMetadata().getCmdCode();
         if (cmdCode == ExternalMessageCmdCode.idle) {
-            // NOTE:心跳包不处理 因为这里实现的ChannelInboundHandlerAdapter并不是channelRead0方法不会进行Type匹配，因此需要手动忽略消息
+            // NOTE:心跳包不处理 因为这里实现的ChannelInboundHandlerAdapter并不是channelRead0方法 因此不会进行Type匹配，因此需要手动忽略消息
             return;
         }
 

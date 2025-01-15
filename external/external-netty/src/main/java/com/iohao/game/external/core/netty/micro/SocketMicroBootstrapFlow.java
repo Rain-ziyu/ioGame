@@ -66,7 +66,7 @@ abstract class SocketMicroBootstrapFlow extends AbstractMicroBootstrapFlow<Serve
             return;
         }
 
-        // netty 心跳检测
+        // NOTE: netty 心跳检测
         context.addLast("idleStateHandler", new IdleStateHandler(
                 idleProcessSetting.getReaderIdleTime(),
                 idleProcessSetting.getWriterIdleTime(),
@@ -74,7 +74,7 @@ abstract class SocketMicroBootstrapFlow extends AbstractMicroBootstrapFlow<Serve
                 idleProcessSetting.getTimeUnit())
         );
 
-        // 心跳响应、心跳钩子 Handler
+        // NOTE: 自定义 心跳响应、心跳钩子 Handler
         SocketIdleHandler socketIdleHandler = setting.option(SettingOption.socketIdleHandler);
         context.addLast("idleHandler", socketIdleHandler);
     }
@@ -97,12 +97,12 @@ abstract class SocketMicroBootstrapFlow extends AbstractMicroBootstrapFlow<Serve
         SocketCmdAccessAuthHandler socketCmdAccessAuthHandler = setting.option(SettingOption.socketCmdAccessAuthHandler);
         context.addLast("CmdAccessAuthHandler", socketCmdAccessAuthHandler);
 
-        // 游戏对外服路由数据缓存
+        // NOTE: 游戏对外服路由数据缓存
         if (Objects.nonNull(ExternalGlobalConfig.externalCmdCache)) {
             context.addLast("CmdCacheHandler", CmdCacheHandler.me());
         }
 
-        // 负责把游戏端的请求转发给 Broker（游戏网关）的 Handler
+        // NOTE: 负责把游戏端的请求转发给 Broker（游戏网关）的 Handler
         SocketRequestBrokerHandler socketRequestBrokerHandler = setting.option(SettingOption.socketRequestBrokerHandler);
         context.addLast("RequestBrokerHandler", socketRequestBrokerHandler);
     }

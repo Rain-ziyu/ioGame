@@ -53,7 +53,7 @@ public final class SocketRequestBrokerHandler extends SimpleChannelInboundHandle
         // 给请求消息加上一些 user 自身的数据
         SocketUserSession userSession = this.userSessions.getUserSession(ctx);
         userSession.employ(message);
-
+        // NOTE: 为请求添加 traceId
         if (IoGameGlobalConfig.openTraceId) {
             HeadMetadata headMetadata = message.getHeadMetadata();
             headMetadata.setTraceId(TraceKit.newTraceId());
@@ -61,6 +61,7 @@ public final class SocketRequestBrokerHandler extends SimpleChannelInboundHandle
 
         try {
             // 请求游戏网关，Broker（游戏网关）会将请求转发到具体的游戏逻辑服
+            // NOTE: 将用户请求转发至游戏网关进行实际业务处理
             brokerClient.oneway(message);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
