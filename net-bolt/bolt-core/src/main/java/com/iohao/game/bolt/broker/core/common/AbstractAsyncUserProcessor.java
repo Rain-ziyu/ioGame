@@ -29,6 +29,7 @@ import java.util.concurrent.Executor;
  * @author 渔民小镇
  * @date 2022-11-10
  */
+// TODO: 在这里AbstractAsyncUserProcessor继承了AsyncUserProcessor 因此所有的子类都是sofabolt的 Processor用于处理请求
 public abstract class AbstractAsyncUserProcessor<T> extends AsyncUserProcessor<T>
         implements UserProcessorExecutorAware {
 

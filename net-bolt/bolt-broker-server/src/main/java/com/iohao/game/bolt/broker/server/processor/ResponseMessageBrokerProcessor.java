@@ -60,6 +60,7 @@ public final class ResponseMessageBrokerProcessor extends AbstractAsyncUserProce
 
         BalancedManager balancedManager = brokerServer.getBalancedManager();
         ExternalBrokerClientLoadBalanced externalLoadBalanced = balancedManager.getExternalLoadBalanced();
+        // NOTE: 根据请求header中的sourceClientId，获取指定的对外服链接
         BrokerClientProxy brokerClientProxy = externalLoadBalanced.get(sourceClientId);
 
         if (Objects.isNull(brokerClientProxy)) {
@@ -69,6 +70,7 @@ public final class ResponseMessageBrokerProcessor extends AbstractAsyncUserProce
 
         try {
             // 转发 给 对外服务器
+            // CORE: 网关服 bolt处理器将请求转发给指定的对外服(ResponseMessageExternalProcessor进行处理)，也即直接与客户端建立链接的服务
             brokerClientProxy.oneway(responseMessage);
         } catch (RemotingException | InterruptedException e) {
             log.error(e.getMessage(), e);

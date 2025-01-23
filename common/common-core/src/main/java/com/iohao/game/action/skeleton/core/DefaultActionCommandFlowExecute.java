@@ -50,15 +50,15 @@ final class DefaultActionCommandFlowExecute implements ActionCommandFlowExecute 
             // action
             ActionCommand actionCommand = flowContext.getActionCommand();
 
-            // 2 ---- ActionController 工厂
+            // NOTE: 2 ---- ActionController 工厂 即寻找实际的业务逻辑处理器，类似于Spring中寻找对应的controller
             var factoryBean = barSkeleton.getActionFactoryBean();
             var controller = factoryBean.getBean(actionCommand);
             // 业务 actionController
             flowContext.setActionController(controller);
 
-            // 3 ---- fuck中 开始执行控制器方法, 这是真正处理客户端请求的逻辑.
+            // NOTE: 3 ---- fuck中 获取
             var actionMethodInvoke = barSkeleton.getActionMethodInvoke();
-            // 得到业务类的返回结果
+            // CORE: 执行业务类并获取返回结果, 这是真正处理客户端请求的逻辑. 内部是用户开发的业务逻辑
             var result = actionMethodInvoke.invoke(flowContext);
             flowContext.setMethodResult(result);
 

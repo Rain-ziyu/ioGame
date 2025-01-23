@@ -34,7 +34,7 @@ import com.iohao.game.action.skeleton.protocol.ResponseMessage;
 public final class DefaultActionAfter implements ActionAfter {
     @Override
     public void execute(final FlowContext flowContext) {
-
+        // NOTE: 获取通道上下文，无非是两种类型一种是同步请求就使用 ChannelContext，另一种是oneway请求就使用 BrokerClientContext直接发送给网关
         ChannelContext channelContext = FlowContextKit.getChannelContext(flowContext);
 
         // 有错误就响应给调用方
@@ -46,11 +46,13 @@ public final class DefaultActionAfter implements ActionAfter {
 
         // action 方法返回值是 void 的，不做处理
         ActionCommand actionCommand = flowContext.getActionCommand();
-        if (actionCommand.getActionMethodReturnInfo().isVoid()) {
+        if (actionCommand.getActionMethodReturnInfo()
+                         .isVoid()) {
             return;
         }
 
         // 将数据回传给调用方
+        // CORE: 在这里将请求执行结果返回给网关服，交由网关服(ResponseMessageBrokerProcessor处理器)进行处理转发
         channelContext.sendResponse(response);
     }
 }

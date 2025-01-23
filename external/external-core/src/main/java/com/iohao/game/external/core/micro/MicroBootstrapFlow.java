@@ -92,7 +92,7 @@ public interface MicroBootstrapFlow<Bootstrap> {
         // NOTE:配置心跳相关
         pipelineIdle(pipelineContext);
         /*
-         * NOTE:自定义的业务编排 pipeline
+         * NOTE:自定义的业务编排 pipeline，控制Netty的解析处理流程
          * 开发者可以单独重写这个接口方法，达到自定义编排 Handler，
          * 这样可以保留编解码、心跳相关的。
          *
